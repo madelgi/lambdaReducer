@@ -1,0 +1,7 @@
+*~
+*.swp
+*.swo
+.classpath
+.project
+target
+project/target
