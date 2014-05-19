@@ -1,0 +1,3 @@
+I := \x.x;
+three := \f.\a.f(f(f a));
+Y := \h.(\g.h(g g))(\g.h(g g));
