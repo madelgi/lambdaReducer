@@ -1,6 +1,6 @@
 # Lambda reducer
 
-A reduction engine for the lambda calculus. Much of the included code was provided by Jim Fix.
+A reduction engine for the lambda calculus. Much of the included code was provided by [Jim Fix](people.reed.edu/~jimfix/).
 
 ## About
 
