@@ -1,10 +1,5 @@
 //
-// MATH 384: Programming Language Design & Implementation
-// Spring 2014
-//
-// HW 6: A Lambda Calculus Parser and Reducing Engine 
-//
-// Due: 4.28.14
+// reducer.scala
 //
 // This code defines an object reducer whose "main" 
 // method parses and reduces terms of the lambda 
@@ -41,19 +36,6 @@
 //   LAM("h",APP(LAM("g",APP(VAR("h"),APP(VAR("g"),VAR("g")))),
 //               LAM("g",APP(VAR("h"),APP(VAR("g"),VAR("g"))))))
 //
-// By investigations of Church and others, this language is 
-// found to be powerful enough to express computations (it 
-// is Turing-complete) including all the recursive functions 
-// on the natural numbers.  It has a well-defined semantics
-// often defined as rewrite rules, in the form of beta
-// reduction-- the rule for replacing all occurrences of
-// a formal parameter by an actual parameter (term) within an
-// abstraction's body upon its application-- and all
-// programs where this rewriting can halt have a determined
-// irreducible form.  In addition, this form can be reached
-// via normal order reduction, where the leftmost, outermost
-// reducible term is acted upon.
-//
 // We include functionality for parsing  "Church modules."  These
 // are text files that give a series of definitions of named terms
 // that can then be used within your entry of terms in the reducer.
@@ -75,50 +57,29 @@
 //  
 //     reduce > (I I) three I;
 //
-// and your program should being applying NOR steps to yield a
+// and the program will begin applying NOR steps to yield a
 // term like
 //
 //     \x$1234.x$1234
 //
-// To make the reducer program work, your assignment is to write three methods
+// The numbers simply indicate variable names. Sometimes, the
+// program will rename variables for clarity. For example,
+// the lambda term
 //
-// 1. substitute(t,a,x): replace all free occurrences of the variable
-//                x with the term a inside the term t.
-// 2. isReducible(t): determine whether or not a term t has a 
-//                    reducible subterm
-// 3. normalReduce(t): returns a term resulting from a normal
-//                     order reduction step applied to a term t
+//     (\x.\y.x y) y
 //
-// One has to take some caution in this code.  First, note that 
-// normal order reduction is well-defined-- your reduce method will 
-// want to hunt through a term's subterm structure to find the leftmost
-// outermost reducible subterm (which might be the whole term itself).  
-// The code is simple, but takes some forethought to write.  
+// could incorrectly substitute to
 //
-// Second, the substitution needs to avoid name conflicts when it 
-// hits an abstraction (i.e. LAM) term during its traversal of a term's 
-// tree.  It should want to rename a function's formal parameter in 
-// order to prevent accidental binding of free names in the term that's 
-// replacing the variable.  
+//     \y.y y
 //
-// To enable this activity, I've provided a Vars module that provides
-// an endless supply of "fresh" variables by adding version numbers 
-// to names of existing variables.  For example, 
-//    Vars.fresh("y")
-// may yield a string like "y$1234" and
-//    Vars.fresh("y$1234")
-// may yield a string like "y$1235".  The code guarantees that 
-// the suffix integer that's being appended will be unique over 
-// all prefix names (i.e. there can't be an "x$1234" and also a
-// "y$1234" within the same normalize execution).
-// 
-// Your code can blindly keep requesting fresh variables as
-// it sees fit.
-// 
-// Hand in your hw6 folder (compressed) in the usual place 
-// in AFS.  As a last requirement, please include ten test 
-// programs in that folder so that I can evaluate your code's 
-// correctness.
+// The program automatically recognizes these "bound/free" variable
+// errors, and will rename variables to avoid them. That is, the term
+// two lines above would reduce like so:
+//
+//     (\x.\y.x y) y ---> (\x.\y$1.x y$1) y ---> \y$1.y y$1,
+//
+// maintaining the distinction between the bound y and the free y
+// by renaming the bound y as y$1.
 //
 
 package mdel.lambdaReducer;
